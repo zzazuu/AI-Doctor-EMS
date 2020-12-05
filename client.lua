@@ -122,7 +122,7 @@ function GoToTargetWalking(target, vehicle, driver)
         TaskGoToCoordAnyMeans(driver, coords, 2.0, 0, 0, 786603, 0xbf800000)
         distanceToTarget = #(coords - medicCoords)
         norunrange = false 
-        if distanceToTarget <= 10 and not norunrange then -- stops ai from sprinting when close
+        if distanceToTarget <= 10 and not norunrange then
             TaskGoToCoordAnyMeans(driver, coords, 1.0, 0, 0, 786603, 0xbf800000)
             norunrange = true
         end
@@ -186,11 +186,4 @@ function notification(text, type)
 	else
 		ESX.ShowNotification(text)
 	end
-end
-
-function loadAnimDict(dict)
-    while (not HasAnimDictLoaded(dict)) do
-        RequestAnimDict(dict)
-        Citizen.Wait(0)
-    end
 end
