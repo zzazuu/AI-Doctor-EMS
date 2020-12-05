@@ -93,31 +93,34 @@ function DeleteVeh(vehicle, driver)
     RemoveBlip(medicBlip)
 end
 
-function GoToTarget(x, y, z, vehicle, driver, vehhash, target) --1074528293
+function GoToTarget(x, y, z, vehicle, driver, vehhash, target)
 	SetVehicleSiren(vehicle, true)
-    TaskVehicleDriveToCoord(driver, vehicle, x, y, z, 17.0, 0, vehhash, 262716, 1, true)
+    TaskVehicleDriveToCoord(driver, vehicle, x, y, z, 17.0, 0, vehhash, 786603, 1, true)
     ESX.ShowAdvancedNotification(_U('dispath_company'), _U('dispatch_request'), _U('dispatch_message'),'CHAR_CALL911', 8)
     enroute = true
     while enroute do
-        Citizen.Wait(500)
-        distanceToTarget = GetDistanceBetweenCoords(GetEntityCoords(target), GetEntityCoords(vehicle).x, GetEntityCoords(vehicle).y, GetEntityCoords(vehicle).z, true)
-            if distanceToTarget < 20 then
-                TaskVehicleTempAction(driver, vehicle, 27, 6000)
-				SetVehicleUndriveable(vehicle, true)
-				SetVehicleDoorsLockedForAllPlayers(vehicle, true)
-				SetVehicleSiren(vehicle, false)
-				TaskLeaveVehicle(driver, vehicle, 1)
-                GoToTargetWalking(target, vehicle, driver)
-            end
+		Citizen.Wait(500)
+		local playerCoords = GetEntityCoords(target)
+		local medicCoords = GetEntityCoords(vehicle)
+        distanceToTarget = #(playerCoords - medicCoords)
+        if distanceToTarget < 20 then
+            TaskVehicleTempAction(driver, vehicle, 27, 6000)
+		    SetVehicleUndriveable(vehicle, true)
+		    SetVehicleDoorsLockedForAllPlayers(vehicle, true)
+		    SetVehicleSiren(vehicle, false)
+		    TaskLeaveVehicle(driver, vehicle, 1)
+            GoToTargetWalking(target, vehicle, driver)
+        end
     end
 end
 
 function GoToTargetWalking(target, vehicle, driver)
 	local coords = GetEntityCoords(target)
     while enroute do
-        Citizen.Wait(500)
+		Citizen.Wait(500)
+		local medicCoords = GetEntityCoords(driver)
         TaskGoToCoordAnyMeans(driver, coords, 2.0, 0, 0, 786603, 0xbf800000)
-        distanceToTarget = GetDistanceBetweenCoords(coords, GetEntityCoords(driver).x, GetEntityCoords(driver).y, GetEntityCoords(driver).z, true)
+        distanceToTarget = #(coords - medicCoords)
         norunrange = false 
         if distanceToTarget <= 10 and not norunrange then -- stops ai from sprinting when close
             TaskGoToCoordAnyMeans(driver, coords, 1.0, 0, 0, 786603, 0xbf800000)
